@@ -55,6 +55,7 @@ public class MainActivity extends ActionBarActivity {
 			@Override
 			public void onReceive(Context arg0, Intent arg1) {
 				 String action = arg1.getAction();
+				 System.out.println(arg0.equals(MainActivity.this));
 	             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
 	                    BluetoothDevice device = arg1.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE); 	
 	                    if (device.getBondState() != BluetoothDevice.BOND_BONDED)
@@ -73,19 +74,22 @@ public class MainActivity extends ActionBarActivity {
 	                    newadapter=new CustomList(c,devices,names);
                     	list.setAdapter(newadapter);
                     	t.setText("Scanning in Progress");
+                    	t.setText("Found "+count+" new Devices");
 	                   } 
 	                else if (BluetoothAdapter.ACTION_DISCOVERY_STARTED.equals(action)) {
 	                	System.out.println("Started Discovering Divices");
 	                	t.setText("Scanning in Progress");
 	                }
 	                else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
-	                	System.out.println("Done");
-	                	t.setText("Found "+count+" new Devices");
+	                	System.out.println("Done" + count);
+	                	t.setText("Found "+devices.size()+" new Devices");
 	                	newadapter=new CustomList(c,devices,names);
 	                    list.setAdapter(newadapter);
+	                    
 	                	devices.clear();
-	                	names.clear();
+	                    names.clear();
 	                	count=0;
+	                	unlink();
 	                	//displayNotification();
 	                } 
 			}
@@ -93,6 +97,18 @@ public class MainActivity extends ActionBarActivity {
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
+	public void unlink()
+	{
+		try
+		{
+			unregisterReceiver(mReceiver);
+		}
+		catch(Exception e)
+		{
+			
+		}
+
+	}
 	
 	
 	

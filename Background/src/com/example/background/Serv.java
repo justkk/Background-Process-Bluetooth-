@@ -20,8 +20,8 @@ import android.util.Log;
 public class Serv extends IntentService {
 	BluetoothAdapter bluetooth;
 	BroadcastReceiver mReceiver;
-	ArrayList <String> devices;
-	int count=0;
+	ArrayList <String> dev;
+	int cou=0;
 	public Serv() {
 		super("Default Service");
 		// TODO Auto-generated constructor stub
@@ -36,7 +36,7 @@ public class Serv extends IntentService {
 	protected void onHandleIntent(Intent intent) {
 		// TODO Auto-generated method stub
 		//Log.v("av","av");
-		devices=new ArrayList<String>();
+		dev=new ArrayList<String>();
 		bluetooth=BluetoothAdapter.getDefaultAdapter();
 		IntentFilter filter = new IntentFilter();
 		mReceiver = new BroadcastReceiver(){
@@ -44,16 +44,17 @@ public class Serv extends IntentService {
 			public void onReceive(Context arg0, Intent arg1) {
 				// TODO Auto-generated method stub
 				 String action = arg1.getAction();
+				 
 	             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
 	                    BluetoothDevice device = arg1.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE); 
 	                    if (device.getBondState() != BluetoothDevice.BOND_BONDED)
 	                    {
-	                    	if(devices.contains(device.getAddress())==false)
+	                    	if(dev.contains(device.getAddress())==false)
 	                    	{
-	                    		count+=1;
-	                    		devices.add(device.getAddress());
+	                    		cou+=1;
+	                    		dev.add(device.getAddress());
 	                    	}
-	                    	//count+=1;
+	                    	//cou+=1;
 	                    }
 	                    System.out.println(device.getName());
 	                   } 
@@ -61,13 +62,13 @@ public class Serv extends IntentService {
 	                	System.out.println("Started Discovering Divices");
 	                }
 	                else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
-	                	System.out.println(count + " Done");
-	                	System.out.println(devices);
+	                	System.out.println(cou + " Done");
+	                	System.out.println(dev);
 	                	
-	                	if(count>0)
-	                		displayNotification(count);
-	                	devices.clear();
-	                	count=0;
+	                	if(cou>0)
+	                		displayNotification(cou);
+	                	dev.clear();
+	                	cou=0;
 	                	onDestroy();
 	                } 
 			}
